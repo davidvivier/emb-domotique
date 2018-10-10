@@ -1,3 +1,8 @@
+# Keil
+*.uvguix.tparlem
+*.uvoptx
+*.uvprojx
+
 # Prerequisites
 *.d
 
