@@ -61,6 +61,8 @@
 /* Private variables ---------------------------------------------------------*/
 struct netif gnetif; /* network interface structure */
 
+static TS_StateTypeDef  TS_State;
+
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void StartThread(void const * argument);
@@ -69,6 +71,10 @@ static void Netif_Config(void);
 static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
+
+static void TouchscreenThread(void const * argument);
+
+uint8_t CheckForUserInput(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -121,6 +127,8 @@ static void StartThread(void const * argument)
 { 
   /* Initialize LCD */
   BSP_Config();
+
+  osThreadDef(Touchscreen, TouchscreenThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
   
   /* Create tcp_ip stack thread */
   tcpip_init(NULL, NULL);
@@ -207,11 +215,85 @@ static void BSP_Config(void)
   LCD_LOG_Init();
   
   /* Show Header and Footer texts */
-  LCD_LOG_SetHeader((uint8_t *)"Webserver Application Netconn API");
-  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO board");
+  LCD_LOG_SetHeader((uint8_t *)"Webserver Application Netconn API TEST Domotique");
+  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO board test");
   
   LCD_UsrLog ((char *)"  State: Ethernet Initialization ...\n");
 }
+
+/**
+  * @brief  Check for user input.
+  * @param  None
+  * @retval Input state (1 : active / 0 : Inactive)
+  */
+uint8_t CheckForUserInput(void)
+{
+  if (BSP_PB_GetState(BUTTON_KEY) != RESET)
+  {
+    HAL_Delay(10);
+    while (BSP_PB_GetState(BUTTON_KEY) != RESET);
+    return 1 ;
+  }
+  return 0;
+}
+
+static void TouchscreenThread(void const * argument) {
+	
+	uint8_t  status = 0;
+  uint16_t x, y;
+  uint8_t  text[30];
+
+	status = BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+
+  if (status != TS_OK)
+  {
+    BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+    BSP_LCD_SetTextColor(LCD_COLOR_RED);
+    BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - 95, (uint8_t *)"ERROR", CENTER_MODE);
+    BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - 80, (uint8_t *)"Touchscreen cannot be initialized", CENTER_MODE);
+  }
+
+
+
+  while (1)
+  {
+
+    if (status == TS_OK)
+    {
+      /* Check in polling mode in touch screen the touch status and coordinates */
+      /* if touch occurred                                                      */
+      BSP_TS_GetState(&TS_State);
+      if(TS_State.touchDetected)
+      {
+        /* Get X and Y position of the touch post calibrated */
+        x = TS_State.touchX[0];
+        y = TS_State.touchY[0];
+
+        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        sprintf((char*)text, "Nb touch detected = %d", TS_State.touchDetected);
+        BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
+
+        /* Display 1st touch detected coordinates */
+        sprintf((char*)text, "1[%d,%d]    ", x, y);
+        BSP_LCD_DisplayStringAt(15,
+                                BSP_LCD_GetYSize() - 25,
+                                (uint8_t *)&text,
+                                LEFT_MODE);
+      }
+
+      
+    }
+
+    if (CheckForUserInput() > 0)
+    {
+      return;
+    }
+
+    HAL_Delay(10);
+  }
+}
+
 
 /**
   * @brief  System Clock Configuration
