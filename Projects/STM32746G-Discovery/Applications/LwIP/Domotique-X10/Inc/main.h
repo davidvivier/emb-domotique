@@ -80,6 +80,18 @@
 #define GW_ADDR2   0
 #define GW_ADDR3   1 
 
+
+/* Custom constants */
+
+#define BUTTON_ON_X 400
+#define BUTTON_ON_Y 60
+#define BUTTON_ON_RADIUS 30
+
+#define BUTTON_OFF_X 400
+#define BUTTON_OFF_Y 180
+#define BUTTON_OFF_RADIUS 30
+
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */  
 

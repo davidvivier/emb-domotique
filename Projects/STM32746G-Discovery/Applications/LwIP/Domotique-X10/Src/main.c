@@ -260,14 +260,6 @@ static void TouchscreenThread(void const * argument) {
 
 
 
-  // Button ON
-  BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-  BSP_LCD_FillCircle(400, 60, 30);
-
-  // Button ON
-  BSP_LCD_SetTextColor(LCD_COLOR_RED);
-  BSP_LCD_FillCircle(400, 180, 30);
-
   while (1)
   {
 
@@ -294,9 +286,43 @@ static void TouchscreenThread(void const * argument) {
                                 (uint8_t *)&text,
                                 LEFT_MODE);
 
+
+        if ((y > (BUTTON_ON_Y - BUTTON_ON_RADIUS)) &&
+                    (y < (BUTTON_ON_Y + BUTTON_ON_RADIUS)))
+                {
+
+          if ((x > (BUTTON_ON_X - BUTTON_ON_RADIUS)) &&
+              (x < (BUTTON_ON_X + BUTTON_ON_RADIUS)))
+          {
+              // button ON touched
+              LCD_UsrLog ((char *)"  button ON touched\n");
+          }
+        }
+
+        if ((y > (BUTTON_OFF_Y - BUTTON_OFF_RADIUS)) &&
+                    (y < (BUTTON_OFF_Y + BUTTON_OFF_RADIUS)))
+                {
+
+          if ((x > (BUTTON_OFF_X - BUTTON_OFF_RADIUS)) &&
+              (x < (BUTTON_OFF_X + BUTTON_OFF_RADIUS)))
+          {
+              // button OFF touched
+              LCD_UsrLog ((char *)"  button OFF touched\n");
+          }
+        }
+
+
+        // Button ON
+        BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
+        BSP_LCD_FillCircle(BUTTON_ON_X, BUTTON_ON_Y, BUTTON_ON_RADIUS);
+
+        // Button ON
+        BSP_LCD_SetTextColor(LCD_COLOR_RED);
+        BSP_LCD_FillCircle(BUTTON_OFF_X, BUTTON_OFF_Y, BUTTON_OFF_RADIUS);
+
+        //TODO write ON and OFF on buttons 
+
       }
-
-
 
     }
 
