@@ -258,6 +258,16 @@ static void TouchscreenThread(void const * argument) {
 
   LCD_UsrLog ((char *)"  TouchscreenThread entered\n");
 
+
+
+  // Button ON
+  BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
+  BSP_LCD_FillCircle(400, 60, 30);
+
+  // Button ON
+  BSP_LCD_SetTextColor(LCD_COLOR_RED);
+  BSP_LCD_FillCircle(400, 180, 30);
+
   while (1)
   {
 
@@ -284,10 +294,8 @@ static void TouchscreenThread(void const * argument) {
                                 (uint8_t *)&text,
                                 LEFT_MODE);
 
-        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-        BSP_LCD_FillCircle(300, 200, 100);
-              
       }
+
 
 
     }
