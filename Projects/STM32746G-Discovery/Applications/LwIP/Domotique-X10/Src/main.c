@@ -130,6 +130,7 @@ static void StartThread(void const * argument)
 
   osThreadDef(Touchscreen, TouchscreenThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
   
+
   /* Create tcp_ip stack thread */
   tcpip_init(NULL, NULL);
   
@@ -147,6 +148,8 @@ static void StartThread(void const * argument)
   osThreadDef(DHCP, DHCP_thread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
   osThreadCreate (osThread(DHCP), &gnetif);
 #endif
+
+  osThreadCreate(osThread(Touchscreen)  , NULL);
 
   for( ;; )
   {
@@ -215,7 +218,7 @@ static void BSP_Config(void)
   LCD_LOG_Init();
   
   /* Show Header and Footer texts */
-  LCD_LOG_SetHeader((uint8_t *)"Webserver Application Netconn API TEST Domotique");
+  LCD_LOG_SetHeader((uint8_t *)"Domotique X10");
   LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO board test");
   
   LCD_UsrLog ((char *)"  State: Ethernet Initialization ...\n");
@@ -240,7 +243,7 @@ uint8_t CheckForUserInput(void)
 static void TouchscreenThread(void const * argument) {
 	
 	uint8_t  status = 0;
-  uint16_t x, y;
+  uint16_t x, y;  
   uint8_t  text[30];
 
 	status = BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
@@ -253,7 +256,7 @@ static void TouchscreenThread(void const * argument) {
     BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - 80, (uint8_t *)"Touchscreen cannot be initialized", CENTER_MODE);
   }
 
-
+  LCD_UsrLog ((char *)"  TouchscreenThread entered\n");
 
   while (1)
   {
@@ -280,9 +283,13 @@ static void TouchscreenThread(void const * argument) {
                                 BSP_LCD_GetYSize() - 25,
                                 (uint8_t *)&text,
                                 LEFT_MODE);
+
+        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+        BSP_LCD_FillCircle(300, 200, 100);
+              
       }
 
-      
+
     }
 
     if (CheckForUserInput() > 0)
