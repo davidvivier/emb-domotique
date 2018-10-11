@@ -98,6 +98,11 @@ int main(void)
        - Global MSP (MCU Support Package) initialization
      */
   HAL_Init();  
+
+
+  /* Initialize LEDs */
+  BSP_LED_Init(LED1);
+  
   
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
@@ -296,6 +301,7 @@ static void TouchscreenThread(void const * argument) {
           {
               // button ON touched
               LCD_UsrLog ((char *)"  button ON touched\n");
+              BSP_LED_On(LED1);
           }
         }
 
@@ -308,6 +314,7 @@ static void TouchscreenThread(void const * argument) {
           {
               // button OFF touched
               LCD_UsrLog ((char *)"  button OFF touched\n");
+              BSP_LED_Off(LED1);
           }
         }
 
