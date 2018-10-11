@@ -342,6 +342,12 @@ static void TouchscreenThread(void const * argument) {
   }
 }
 
+// Overrides Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c:288
+void HAL_IncTick(void) {
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+}
+
+
 
 /**
   * @brief  System Clock Configuration
