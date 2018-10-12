@@ -71,11 +71,15 @@ static char state;
 static char state;
 static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
 static int state_threshold[] = {1800, 900, 100, 0, 100, 225, 100, 450};
-//static char buf_send[32];
-static char buf_send[] = {
-  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0   // ON
-//  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0  // OFF
-};
+static char buf_send[32];
+//static char buf_send[] = {
+//  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0   // ON
+  //0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0  // OFF
+//};
+static char buf_on[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0};
+
+static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0};
+
 static int counter;
 static int current_bit_index;
 
@@ -98,6 +102,9 @@ static void CPU_CACHE_Enable(void);
 static void RF_Init(void);
 static void TIM3_Init(void);
 static void X10_Init(void);
+
+static void RF_X10_Send_On(void);
+static void RF_X10_Send_Off(void);
 
 static void TouchscreenThread(void const * argument);
 
@@ -272,6 +279,25 @@ static void TIM3_Init(void) {
     Error_Handler();
   }
 }
+
+static void RF_X10_Send_On(void ) {
+  LCD_UsrLog ((char *)"  Sending ON\n");
+  int i = 0;
+  for (i = 0; i < 32; i++) {
+    buf_send[i] = buf_on[i];
+  }
+  do_send = 1;
+}
+
+static void RF_X10_Send_Off(void) {
+  LCD_UsrLog ((char *)"  Sending OFF\n");
+  int i = 0;
+  for (i = 0; i < 32; i++) {
+    buf_send[i] = buf_off[i];
+  }
+  do_send = 1;
+}
+
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -486,9 +512,13 @@ static void TouchscreenThread(void const * argument) {
           {
               // button ON touched
               //LCD_UsrLog ((char *)"  button ON touched\n");
-              do_send = 1;
-              BSP_LED_Toggle(LED1);
+              //buf_send = &buf_on;
+              //do_send = 1;
+              //BSP_LED_Toggle(LED1);
               //BSP_LED_On(LED1);
+              RF_X10_Send_On();
+              HAL_Delay(40);
+
           }
         }
 
@@ -502,6 +532,10 @@ static void TouchscreenThread(void const * argument) {
               // button OFF touched
               //LCD_UsrLog ((char *)"  button OFF touched\n");
               //BSP_LED_Off(LED1);
+              //buf_send = &buf_off;
+              //do_send = 1;
+              RF_X10_Send_Off();
+              HAL_Delay(40);
           }
         }
 
