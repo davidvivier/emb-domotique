@@ -56,6 +56,7 @@
 #include "stm32746g_discovery.h"
 #include "stm32746g_discovery_ts.h"
 #include "stm32746g_discovery_lcd.h"
+#include "stm32f7xx_it.h"
 
 
 /* Exported types ------------------------------------------------------------*/
@@ -79,6 +80,16 @@
 #define GW_ADDR1   168
 #define GW_ADDR2   0
 #define GW_ADDR3   1 
+
+/* Definition for TIMx clock resources */
+#define TIMx                           TIM3
+#define TIMx_CLK_ENABLE()              __HAL_RCC_TIM3_CLK_ENABLE()
+
+
+/* Definition for TIMx's NVIC */
+#define TIMx_IRQn                      TIM3_IRQn
+#define TIMx_IRQHandler                TIM3_IRQHandler
+
 
 
 /* Custom constants */

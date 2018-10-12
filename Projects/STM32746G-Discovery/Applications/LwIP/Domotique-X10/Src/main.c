@@ -63,6 +63,10 @@ struct netif gnetif; /* network interface structure */
 
 static TS_StateTypeDef  TS_State;
 
+TIM_HandleTypeDef        Timer3;
+
+/* Prescaler declaration */
+uint32_t uwPrescalerValue = 0;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void StartThread(void const * argument);
@@ -72,7 +76,11 @@ static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 
+static void TIM3_Init(void);
+
 static void TouchscreenThread(void const * argument);
+
+
 
 uint8_t CheckForUserInput(void);
 
@@ -99,7 +107,6 @@ int main(void)
      */
   HAL_Init();  
 
-
   /* Initialize LEDs */
   BSP_LED_Init(LED1);
   
@@ -107,6 +114,9 @@ int main(void)
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
   
+	
+  TIM3_Init();
+	
   /* Init thread */
 #if defined(__GNUC__)
   osThreadDef(Start, StartThread, osPriorityNormal, 0, configMINIMAL_STACK_SIZE * 5);
@@ -132,6 +142,7 @@ static void StartThread(void const * argument)
 { 
   /* Initialize LCD */
   BSP_Config();
+	
 
   osThreadDef(Touchscreen, TouchscreenThread, osPriorityBelowNormal, 0, configMINIMAL_STACK_SIZE * 2);
   
@@ -163,6 +174,56 @@ static void StartThread(void const * argument)
   }
 }
 
+
+
+static void TIM3_Init(void) {
+  /* Compute the prescaler value to have TIMx counter clock equal to 10000 Hz */
+  //uwPrescalerValue = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
+  uwPrescalerValue = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
+
+  /* Set TIMx instance */
+  Timer3.Instance = TIMx;
+
+  /* Initialize TIMx peripheral as follows:
+       + Period = 10000 - 1
+       + Prescaler = ((SystemCoreClock / 2)/10000) - 1
+       + ClockDivision = 0
+       + Counter direction = Up
+  */
+  //Timer3.Init.Period            = 10000 - 1;
+  Timer3.Init.Period            = 10000 - 1;
+  //Timer3.Init.Prescaler         = uwPrescalerValue;
+  Timer3.Init.Prescaler         = 216;
+  Timer3.Init.ClockDivision     = 0;
+  Timer3.Init.CounterMode       = TIM_COUNTERMODE_UP;
+  Timer3.Init.RepetitionCounter = 0;
+  Timer3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&Timer3) != HAL_OK)
+  {
+    /* Initialization Error */
+    Error_Handler();
+  }
+
+  /*##-2- Start the TIM Base generation in interrupt mode ####################*/
+  /* Start Channel1 */
+  if (HAL_TIM_Base_Start_IT(&Timer3) != HAL_OK)
+  {
+    /* Starting Error */
+    Error_Handler();
+  }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM6){ // TIM6
+    HAL_IncTick();
+		//HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+  //} else if (htim->Instance == TIM3) {
+  } else {
+		BSP_LED_Toggle(LED1);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+  }
+}
 /**
   * @brief  Initializes the lwIP stack
   * @param  None
@@ -301,7 +362,7 @@ static void TouchscreenThread(void const * argument) {
           {
               // button ON touched
               LCD_UsrLog ((char *)"  button ON touched\n");
-              BSP_LED_On(LED1);
+              //BSP_LED_On(LED1);
           }
         }
 
@@ -314,7 +375,7 @@ static void TouchscreenThread(void const * argument) {
           {
               // button OFF touched
               LCD_UsrLog ((char *)"  button OFF touched\n");
-              BSP_LED_Off(LED1);
+              //BSP_LED_Off(LED1);
           }
         }
 
@@ -343,9 +404,9 @@ static void TouchscreenThread(void const * argument) {
 }
 
 // Overrides Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c:288
-void HAL_IncTick(void) {
+/*void HAL_IncTick(void) {
   HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-}
+}*/
 
 
 

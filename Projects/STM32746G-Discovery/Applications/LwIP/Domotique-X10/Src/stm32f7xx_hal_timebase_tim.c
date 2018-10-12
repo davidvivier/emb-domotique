@@ -41,6 +41,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "main.h"
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
   */
@@ -157,12 +158,15 @@ void HAL_ResumeTick(void)
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+/*void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if (htim->Instance == TimHandle.Instance){
-		HAL_IncTick();
-	}
-}
+	if (htim->Instance == TimHandle.Instance){ // TIM6
+		HAL_IncTick();HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+	//} else if (htim->Instance == TIM3) {
+	} else {
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+  }
+}*/
 
 /**
   * @brief  This function handles TIM interrupt request.
@@ -174,6 +178,15 @@ void TIM6_DAC_IRQHandler(void)
   HAL_TIM_IRQHandler(&TimHandle);
 }
 
+/**
+  * @brief  This function handles TIM interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIM3_DAC_IRQHandler(void)
+{
+  //HAL_TIM_IRQHandler(&TimHandle);
+}
 /**
   * @}
   */ 

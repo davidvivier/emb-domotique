@@ -45,6 +45,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern ETH_HandleTypeDef EthHandle;
+
+extern TIM_HandleTypeDef        Timer3;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -148,6 +151,18 @@ void ETH_IRQHandler(void)
 {
   HAL_ETH_IRQHandler(&EthHandle);
 }
+
+
+/**
+  * @brief  This function handles TIM interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIM3_IRQHandler(void)
+{
+  HAL_TIM_IRQHandler(&Timer3);
+}
+
 
 /**
   * @brief  This function handles PPP interrupt request.
