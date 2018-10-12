@@ -191,9 +191,9 @@ static void TIM3_Init(void) {
        + Counter direction = Up
   */
   //Timer3.Init.Period            = 10000 - 1;
-  Timer3.Init.Period            = 10000 - 1;
+  Timer3.Init.Period            = 166 - 1;
   //Timer3.Init.Prescaler         = uwPrescalerValue;
-  Timer3.Init.Prescaler         = 216;
+  Timer3.Init.Prescaler         = 2;
   Timer3.Init.ClockDivision     = 0;
   Timer3.Init.CounterMode       = TIM_COUNTERMODE_UP;
   Timer3.Init.RepetitionCounter = 0;
