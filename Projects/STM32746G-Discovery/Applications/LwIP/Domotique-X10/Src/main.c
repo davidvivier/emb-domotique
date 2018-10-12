@@ -70,7 +70,7 @@ static char state;
 
 static char state;
 static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
-static int state_threshold[] = {1800, 900, 100, 0, 100, 125, 100, 350};
+static int state_threshold[] = {16, 8, 1, 0, 1, 1, 1, 3};
 static char buf_send[32];
 //static char buf_send[] = {
 //  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0   // ON
@@ -257,10 +257,8 @@ static void TIM3_Init(void) {
        + ClockDivision = 0
        + Counter direction = Up
   */
-  //Timer3.Init.Period            = 10000 - 1;
-  Timer3.Init.Period            = 166 - 1;
-  //Timer3.Init.Prescaler         = uwPrescalerValue;
-  Timer3.Init.Prescaler         = 2;
+  Timer3.Init.Period            = 2 - 1;
+  Timer3.Init.Prescaler         = 355555;
   Timer3.Init.ClockDivision     = 0;
   Timer3.Init.CounterMode       = TIM_COUNTERMODE_UP;
   Timer3.Init.RepetitionCounter = 0;
