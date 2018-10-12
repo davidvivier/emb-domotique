@@ -70,15 +70,15 @@ static char state;
 
 static char state;
 static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
-static int state_threshold[] = {1800, 900, 100, 0, 100, 225, 100, 450};
+static int state_threshold[] = {1800, 900, 100, 0, 100, 125, 100, 350};
 static char buf_send[32];
 //static char buf_send[] = {
 //  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0   // ON
   //0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0  // OFF
 //};
-static char buf_on[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0};
+static char buf_on[]  = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
 
-static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0};
+static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,1,0, 0,0,0,0, 1,1,0,1, 1,1,1,1 };
 
 static int counter;
 static int current_bit_index;
