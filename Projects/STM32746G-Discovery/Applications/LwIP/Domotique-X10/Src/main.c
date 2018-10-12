@@ -286,7 +286,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 
 
-    if (do_send) {
+    if (do_send || (state == 2)) {
       counter++;
       if (counter >= state_threshold[state]) {
         // on change d'état
@@ -297,13 +297,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
           if (state == 3) {
             // on a fini la transmission !
 
-            do_send = 0;
+            //do_send = 0;
             state = 0;
-            counter = 0;
+            //counter = 0;
             current_bit_index = -1;
           } else if (current_bit_index == 7) {
             // on a fini d'envoyer les bits -> bit de fin
+            counter = 0;
+            do_send = 0;
             state = 2;
+
           } else {
             // on a fini d'envoyer le bit précédent
             //  on passe au bit suivant !
