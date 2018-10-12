@@ -65,6 +65,8 @@ static TS_StateTypeDef  TS_State;
 
 TIM_HandleTypeDef        Timer3;
 
+static char state; 
+
 /* Prescaler declaration */
 uint32_t uwPrescalerValue = 0;
 /* Private function prototypes -----------------------------------------------*/
@@ -76,6 +78,7 @@ static void MPU_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 
+static void RF_Init(void);
 static void TIM3_Init(void);
 
 static void TouchscreenThread(void const * argument);
@@ -92,7 +95,7 @@ uint8_t CheckForUserInput(void);
   * @retval None
   */
 int main(void)
-{
+{state = 0;
   /* Configure the MPU attributes as Device memory for ETH DMA descriptors */
   MPU_Config();
 
@@ -113,7 +116,8 @@ int main(void)
   
   /* Configure the system clock to 200 MHz */
   SystemClock_Config(); 
-  
+
+  RF_Init();
 	
   TIM3_Init();
 	
@@ -174,7 +178,27 @@ static void StartThread(void const * argument)
   }
 }
 
+static void RF_Init(void) {
 
+  GPIO_InitTypeDef  gpio_init_structure;
+
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  //gpio_rf = LED1_GPIO_PORT;
+  /* Enable the GPIO_LED clock */
+  //LED1_GPIO_CLK_ENABLE();
+
+  /* Configure the GPIO_LED pin */
+  gpio_init_structure.Pin = GPIO_PIN_6;
+  gpio_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
+  gpio_init_structure.Pull = GPIO_PULLUP;
+  gpio_init_structure.Speed = GPIO_SPEED_HIGH;
+
+  HAL_GPIO_Init(GPIOG, &gpio_init_structure);
+  
+  /* By default, turn off LED */
+  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_6, GPIO_PIN_RESET);
+
+}
 
 static void TIM3_Init(void) {
   /* Compute the prescaler value to have TIMx counter clock equal to 10000 Hz */
@@ -221,7 +245,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   //} else if (htim->Instance == TIM3) {
   } else {
 		BSP_LED_Toggle(LED1);
-    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+    //HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_6);
+    if (state == 0) {
+      state = 1;
+      HAL_GPIO_WritePin(GPIOG, GPIO_PIN_6, GPIO_PIN_SET);
+    } else {
+      state = 0;
+      HAL_GPIO_WritePin(GPIOG, GPIO_PIN_6, GPIO_PIN_RESET);
+    }
   }
 }
 /**
