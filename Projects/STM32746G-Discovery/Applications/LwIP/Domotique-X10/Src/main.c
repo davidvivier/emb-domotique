@@ -73,8 +73,8 @@ static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
 static int state_threshold[] = {1800, 900, 100, 0, 100, 225, 100, 450};
 //static char buf_send[32];
 static char buf_send[] = {
-  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1,
-  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1
+  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0   // ON
+//  0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,1,0,0, 1,1,1,1, 1,0,1,1, 0,0,0,0  // OFF
 };
 static int counter;
 static int current_bit_index;
@@ -301,7 +301,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             state = 0;
             //counter = 0;
             current_bit_index = -1;
-          } else if (current_bit_index == 7) {
+          } else if (current_bit_index == 31) {
             // on a fini d'envoyer les bits -> bit de fin
             counter = 0;
             do_send = 0;
@@ -485,7 +485,7 @@ static void TouchscreenThread(void const * argument) {
               (x < (BUTTON_ON_X + BUTTON_ON_RADIUS)))
           {
               // button ON touched
-              LCD_UsrLog ((char *)"  button ON touched\n");
+              //LCD_UsrLog ((char *)"  button ON touched\n");
               do_send = 1;
               BSP_LED_Toggle(LED1);
               //BSP_LED_On(LED1);
@@ -500,7 +500,7 @@ static void TouchscreenThread(void const * argument) {
               (x < (BUTTON_OFF_X + BUTTON_OFF_RADIUS)))
           {
               // button OFF touched
-              LCD_UsrLog ((char *)"  button OFF touched\n");
+              //LCD_UsrLog ((char *)"  button OFF touched\n");
               //BSP_LED_Off(LED1);
           }
         }
