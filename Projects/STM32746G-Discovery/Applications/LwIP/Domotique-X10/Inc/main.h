@@ -57,7 +57,7 @@
 #include "stm32746g_discovery_ts.h"
 #include "stm32746g_discovery_lcd.h"
 #include "stm32f7xx_it.h"
-
+#include "x10control.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/ 
