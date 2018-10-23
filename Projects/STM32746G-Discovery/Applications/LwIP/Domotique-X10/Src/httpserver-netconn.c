@@ -227,6 +227,13 @@ static void http_server_serve(struct netconn *conn)
           netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
           fs_close(&file);
         }
+        else if(strncmp(buf, "GET /control.html", 17) == 0) 
+        {
+          /* Load STM32F7xx page */
+          fs_open(&file, "/control.html"); 
+          netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+          fs_close(&file);
+        }
         else 
         {
           /* Load Error page */
