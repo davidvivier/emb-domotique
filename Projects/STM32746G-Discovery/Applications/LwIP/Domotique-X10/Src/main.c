@@ -84,6 +84,7 @@ static void TIM3_Init(void);
 
 static void TouchscreenThread(void const * argument);
 
+static void LCD_display_buttons(void);
 
 
 uint8_t CheckForUserInput(void);
@@ -309,7 +310,7 @@ static void BSP_Config(void)
   
   /* Show Header and Footer texts */
   LCD_LOG_SetHeader((uint8_t *)"Domotique X10");
-  LCD_LOG_SetFooter((uint8_t *)"STM32746G-DISCO board test");
+  LCD_LOG_SetFooter((uint8_t *)"Vivier Industries");
   
   LCD_UsrLog ((char *)"  State: Ethernet Initialization ...\n");
 }
@@ -334,7 +335,6 @@ static void TouchscreenThread(void const * argument) {
 	
 	uint8_t  status = 0;
   uint16_t x, y;  
-  uint8_t  text[30];
 
 	status = BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
@@ -346,9 +346,9 @@ static void TouchscreenThread(void const * argument) {
     BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - 80, (uint8_t *)"Touchscreen cannot be initialized", CENTER_MODE);
   }
 
-  LCD_UsrLog ((char *)"  TouchscreenThread entered\n");
+  //LCD_UsrLog ((char *)"  TouchscreenThread entered\n");
 
-
+  LCD_display_buttons();
 
   while (1)
   {
@@ -363,19 +363,6 @@ static void TouchscreenThread(void const * argument) {
         /* Get X and Y position of the touch post calibrated */
         x = TS_State.touchX[0];
         y = TS_State.touchY[0];
-
-        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-        sprintf((char*)text, "Nb touch detected = %d", TS_State.touchDetected);
-        BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
-
-        /* Display 1st touch detected coordinates */
-        sprintf((char*)text, "1[%d,%d]    ", x, y);
-        BSP_LCD_DisplayStringAt(15,
-                                BSP_LCD_GetYSize() - 25,
-                                (uint8_t *)&text,
-                                LEFT_MODE);
-
 
         if ((y > (BUTTON_ON_Y - BUTTON_ON_RADIUS)) &&
                     (y < (BUTTON_ON_Y + BUTTON_ON_RADIUS)))
@@ -413,22 +400,7 @@ static void TouchscreenThread(void const * argument) {
           }
         }
 
-
-        // Button ON
-        BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-        BSP_LCD_FillCircle(BUTTON_ON_X, BUTTON_ON_Y, BUTTON_ON_RADIUS);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-        BSP_LCD_SetBackColor(LCD_COLOR_GREEN);
-        BSP_LCD_DisplayStringAt(BUTTON_ON_X-10, BUTTON_ON_Y-5,  (uint8_t *)"ON", LEFT_MODE);
-
-        // Button OFF
-        BSP_LCD_SetTextColor(LCD_COLOR_RED);
-        BSP_LCD_FillCircle(BUTTON_OFF_X, BUTTON_OFF_Y, BUTTON_OFF_RADIUS);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-        BSP_LCD_SetBackColor(LCD_COLOR_RED);
-        BSP_LCD_DisplayStringAt(BUTTON_OFF_X-10, BUTTON_OFF_Y-5,  (uint8_t *)"OFF", LEFT_MODE);
-        
-        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+        LCD_display_buttons();
 
       }
 
@@ -443,6 +415,24 @@ static void TouchscreenThread(void const * argument) {
   }
 }
 
+static void LCD_display_buttons(void) {
+
+    // Button ON
+    BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
+    BSP_LCD_FillCircle(BUTTON_ON_X, BUTTON_ON_Y, BUTTON_ON_RADIUS);
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+    BSP_LCD_SetBackColor(LCD_COLOR_GREEN);
+    BSP_LCD_DisplayStringAt(BUTTON_ON_X-10, BUTTON_ON_Y-5,  (uint8_t *)"ON", LEFT_MODE);
+
+    // Button OFF
+    BSP_LCD_SetTextColor(LCD_COLOR_RED);
+    BSP_LCD_FillCircle(BUTTON_OFF_X, BUTTON_OFF_Y, BUTTON_OFF_RADIUS);
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+    BSP_LCD_SetBackColor(LCD_COLOR_RED);
+    BSP_LCD_DisplayStringAt(BUTTON_OFF_X-10, BUTTON_OFF_Y-5,  (uint8_t *)"OFF", LEFT_MODE);
+    
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+}
 // Overrides Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c:288
 /*void HAL_IncTick(void) {
   HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);

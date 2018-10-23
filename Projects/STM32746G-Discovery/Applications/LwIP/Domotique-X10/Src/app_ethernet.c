@@ -127,6 +127,7 @@ void DHCP_thread(void const * argument)
           DHCP_state = DHCP_ADDRESS_ASSIGNED;	
          
           sprintf((char *)iptxt, "%s", ip4addr_ntoa((const ip4_addr_t *)&netif->ip_addr));   
+          BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
           LCD_UsrLog ("IP address assigned by a DHCP server: %s\n", iptxt);
         }
         else

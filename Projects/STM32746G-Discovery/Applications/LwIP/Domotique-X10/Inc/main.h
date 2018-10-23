@@ -94,13 +94,13 @@
 
 /* Custom constants */
 
-#define BUTTON_ON_X 400
-#define BUTTON_ON_Y 90
-#define BUTTON_ON_RADIUS 30
+#define BUTTON_ON_X 150
+#define BUTTON_ON_Y 150
+#define BUTTON_ON_RADIUS 45
 
-#define BUTTON_OFF_X 400
-#define BUTTON_OFF_Y 190
-#define BUTTON_OFF_RADIUS 30
+#define BUTTON_OFF_X 300
+#define BUTTON_OFF_Y 150
+#define BUTTON_OFF_RADIUS 45
 
 
 /* Exported macro ------------------------------------------------------------*/
