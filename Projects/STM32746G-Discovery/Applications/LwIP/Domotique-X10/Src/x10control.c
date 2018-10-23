@@ -9,9 +9,24 @@ static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
 static int state_threshold[] = {16, 8, 1, 0, 1, 1, 1, 3};
 static char buf_send[32];
 
-static char buf_on[]  = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
 
-static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,1,0, 0,0,0,0, 1,1,0,1, 1,1,1,1 };
+// base for each HOUSE, configured more precisely later by X10_Init()
+
+#if HOUSE == HOUSE_A
+
+extern char buf[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
+
+#elif HOUSE == HOUSE_B
+
+extern char buf[] = {0,1,1,1, 0,0,0,0, 1,0,0,0, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
+
+#endif
+
+// A1 ON
+//static char buf_on[]  = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
+// A1 OFF
+//static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,1,0, 0,0,0,0, 1,1,0,1, 1,1,1,1 };
+
 
 static int counter;
 static int current_bit_index;
@@ -31,22 +46,84 @@ void X10_Init(void) {
   counter = 0;
   current_bit_index = -1;
 
+  // config according to settings (HOUSE and UNIT)
+
+  switch (UNIT % 9) {
+    case 1:
+      buf[17] = 0;
+      buf[19] = 0;
+      buf[20] = 0;
+      break;
+    case 2:
+      buf[17] = 0;
+      buf[19] = 1;
+      buf[20] = 0;
+      break;
+    case 3:
+      buf[17] = 0;
+      buf[19] = 0;
+      buf[20] = 1;
+      break;
+    case 4:
+      buf[17] = 0;
+      buf[19] = 1;
+      buf[20] = 1;
+      break;
+    case 5:
+      buf[17] = 1;
+      buf[19] = 0;
+      buf[20] = 0;
+      break;
+    case 6:
+      buf[17] = 1;
+      buf[19] = 1;
+      buf[20] = 0;
+      break;
+    case 7:
+      buf[17] = 1;
+      buf[19] = 0;
+      buf[20] = 1;
+      break;
+    case 8:
+      buf[17] = 1;
+      buf[19] = 1;
+      buf[20] = 1;
+      break;
+  }
+
+  buf[5] = 0; // UNIT < 9
+  if (UNIT > 9) {
+    buf[5] = 1;
+  }
+
+  // build footer : invert bits
+
+  for (i = 0; i < 8; i++) {
+
+    buf[8+i] = buf[0+i] == 0 ? 1 : 0;
+    buf[24+i] = buf[16+i] == 0 ? 1 : 0;
+  }
+
 }
 
 void RF_X10_Send_On(void) {
   //LCD_UsrLog ((char *)"Sending ON \n");
+  buf[BIT_STATE_INDEX] = 0;
+  buf[BIT_STATE_INDEX+8] = 1;
   int i = 0;
   for (i = 0; i < 32; i++) {
-    buf_send[i] = buf_on[i];
+    buf_send[i] = buf[i];
   }
   do_send = 1;
 }
 
 void RF_X10_Send_Off(void) {
   //LCD_UsrLog ((char *)"Sending OFF \n");
+  buf[BIT_STATE_INDEX] = 1;
+  buf[BIT_STATE_INDEX+8] = 0;
   int i = 0;
   for (i = 0; i < 32; i++) {
-    buf_send[i] = buf_off[i];
+    buf_send[i] = buf[i];
   }
   do_send = 1;
 }

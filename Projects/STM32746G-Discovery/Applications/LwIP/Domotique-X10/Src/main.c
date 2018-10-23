@@ -65,8 +65,7 @@ static TS_StateTypeDef  TS_State;
 
 TIM_HandleTypeDef        Timer3;
 
-
-  uint8_t  text[30];
+extern char buf[];
 
 /* Prescaler declaration */
 uint32_t uwPrescalerValue = 0;
@@ -124,6 +123,7 @@ int main(void)
   TIM3_Init();
 	
   X10_Init();
+
 
   /* Init thread */
 #if defined(__GNUC__)
@@ -378,6 +378,23 @@ static void TouchscreenThread(void const * argument) {
               //BSP_LED_Toggle(LED1);
               //BSP_LED_On(LED1);
               RF_X10_Send_On();
+
+
+/*  LCD_UsrLog ((char *)"\n{");
+int i = 0;
+  for (i = 0; i < 32; i++) {
+    if (buf[i] == 0) {
+      LCD_UsrLog ((char *)"0,");
+    } else {
+      LCD_UsrLog ((char *)"1,");
+    }
+    if ((i+1)%4 == 0) {
+      LCD_UsrLog ((char *)" ");
+    }
+  }
+  LCD_UsrLog ((char *)"}\n");*/
+
+
               HAL_Delay(40);
 
           }
@@ -396,6 +413,22 @@ static void TouchscreenThread(void const * argument) {
               //buf_send = &buf_off;
               //do_send = 1;
               RF_X10_Send_Off();
+
+/*  LCD_UsrLog ((char *)"\n{");
+int i = 0;
+  for (i = 0; i < 32; i++) {
+    if (buf[i] == 0) {
+      LCD_UsrLog ((char *)"0,");
+    } else {
+      LCD_UsrLog ((char *)"1,");
+    }
+    if ((i+1)%4 == 0) {
+      LCD_UsrLog ((char *)" ");
+    }
+  }
+  LCD_UsrLog ((char *)"}\n");*/
+
+
               HAL_Delay(40);
           }
         }
