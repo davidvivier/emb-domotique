@@ -95,11 +95,11 @@
 /* Custom constants */
 
 #define BUTTON_ON_X 400
-#define BUTTON_ON_Y 60
+#define BUTTON_ON_Y 90
 #define BUTTON_ON_RADIUS 30
 
 #define BUTTON_OFF_X 400
-#define BUTTON_OFF_Y 180
+#define BUTTON_OFF_Y 190
 #define BUTTON_OFF_RADIUS 30
 
 
