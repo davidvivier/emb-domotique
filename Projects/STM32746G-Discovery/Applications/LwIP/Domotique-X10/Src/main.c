@@ -279,6 +279,7 @@ static void TIM3_Init(void) {
 }
 
 static void RF_X10_Send_On(void ) {
+  LCD_UsrLog ((char *)"Sending ON \n");
   int i = 0;
   for (i = 0; i < 32; i++) {
     buf_send[i] = buf_on[i];
@@ -287,6 +288,7 @@ static void RF_X10_Send_On(void ) {
 }
 
 static void RF_X10_Send_Off(void) {
+  LCD_UsrLog ((char *)"Sending OFF \n");
   int i = 0;
   for (i = 0; i < 32; i++) {
     buf_send[i] = buf_off[i];
@@ -539,12 +541,18 @@ static void TouchscreenThread(void const * argument) {
         // Button ON
         BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
         BSP_LCD_FillCircle(BUTTON_ON_X, BUTTON_ON_Y, BUTTON_ON_RADIUS);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        BSP_LCD_SetBackColor(LCD_COLOR_GREEN);
+        BSP_LCD_DisplayStringAt(BUTTON_ON_X-10, BUTTON_ON_Y-5,  (uint8_t *)"ON", LEFT_MODE);
 
-        // Button ON
+        // Button OFF
         BSP_LCD_SetTextColor(LCD_COLOR_RED);
         BSP_LCD_FillCircle(BUTTON_OFF_X, BUTTON_OFF_Y, BUTTON_OFF_RADIUS);
-
-        //TODO write ON and OFF on buttons 
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        BSP_LCD_SetBackColor(LCD_COLOR_RED);
+        BSP_LCD_DisplayStringAt(BUTTON_OFF_X-10, BUTTON_OFF_Y-5,  (uint8_t *)"OFF", LEFT_MODE);
+        
+        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 
       }
 
