@@ -641,6 +641,7 @@ static void SystemClock_Config(void)
 static void Error_Handler(void)
 {
   /* User may add here some code to deal with this error */
+	LCD_UsrLog ((char *)"  Error_Handler() reached :-(\n");
   while(1)
   {
   }
