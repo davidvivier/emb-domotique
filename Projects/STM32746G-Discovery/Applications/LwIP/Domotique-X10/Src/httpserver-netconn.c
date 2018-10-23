@@ -230,8 +230,14 @@ static void http_server_serve(struct netconn *conn)
         }
         else if(strncmp(buf, "GET /control.html", 17) == 0) 
         {
-          /* Load STM32F7xx page */
-          RF_X10_Send_On();
+          if (buflen > 17) {
+            // il y a quelque chose derrière l'url de requête - sans doute une commande :-)
+            if (strncmp(&buf[17], "?command=ON", 11) == 0) {
+              RF_X10_Send_On();
+            } else if (strncmp(&buf[17], "?command=OFF", 12) == 0) {
+              RF_X10_Send_Off();
+            }
+          }
           fs_open(&file, "/control.html"); 
           netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
           fs_close(&file);
