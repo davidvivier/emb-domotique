@@ -52,6 +52,7 @@
 #include <stdio.h>
 #include "httpserver-netconn.h"
 #include "cmsis_os.h"
+#include "x10control.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -230,6 +231,7 @@ static void http_server_serve(struct netconn *conn)
         else if(strncmp(buf, "GET /control.html", 17) == 0) 
         {
           /* Load STM32F7xx page */
+          RF_X10_Send_On();
           fs_open(&file, "/control.html"); 
           netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
           fs_close(&file);
