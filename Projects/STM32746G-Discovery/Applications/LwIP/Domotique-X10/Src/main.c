@@ -207,7 +207,6 @@ static void RF_Init(void) {
 
 static void TIM3_Init(void) {
   /* Compute the prescaler value to have TIMx counter clock equal to 10000 Hz */
-  //uwPrescalerValue = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
   uwPrescalerValue = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
 
   /* Set TIMx instance */
@@ -346,8 +345,6 @@ static void TouchscreenThread(void const * argument) {
     BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - 80, (uint8_t *)"Touchscreen cannot be initialized", CENTER_MODE);
   }
 
-  //LCD_UsrLog ((char *)"  TouchscreenThread entered\n");
-
   LCD_display_buttons();
 
   while (1)
@@ -372,28 +369,7 @@ static void TouchscreenThread(void const * argument) {
               (x < (BUTTON_ON_X + BUTTON_ON_RADIUS)))
           {
               // button ON touched
-              //LCD_UsrLog ((char *)"  button ON touched\n");
-              //buf_send = &buf_on;
-              //do_send = 1;
-              //BSP_LED_Toggle(LED1);
-              //BSP_LED_On(LED1);
               RF_X10_Send_On();
-
-
-/*  LCD_UsrLog ((char *)"\n{");
-int i = 0;
-  for (i = 0; i < 32; i++) {
-    if (buf[i] == 0) {
-      LCD_UsrLog ((char *)"0,");
-    } else {
-      LCD_UsrLog ((char *)"1,");
-    }
-    if ((i+1)%4 == 0) {
-      LCD_UsrLog ((char *)" ");
-    }
-  }
-  LCD_UsrLog ((char *)"}\n");*/
-
 
               HAL_Delay(40);
 
@@ -408,26 +384,7 @@ int i = 0;
               (x < (BUTTON_OFF_X + BUTTON_OFF_RADIUS)))
           {
               // button OFF touched
-              //LCD_UsrLog ((char *)"  button OFF touched\n");
-              //BSP_LED_Off(LED1);
-              //buf_send = &buf_off;
-              //do_send = 1;
               RF_X10_Send_Off();
-
-/*  LCD_UsrLog ((char *)"\n{");
-int i = 0;
-  for (i = 0; i < 32; i++) {
-    if (buf[i] == 0) {
-      LCD_UsrLog ((char *)"0,");
-    } else {
-      LCD_UsrLog ((char *)"1,");
-    }
-    if ((i+1)%4 == 0) {
-      LCD_UsrLog ((char *)" ");
-    }
-  }
-  LCD_UsrLog ((char *)"}\n");*/
-
 
               HAL_Delay(40);
           }
@@ -466,10 +423,6 @@ static void LCD_display_buttons(void) {
     
     BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 }
-// Overrides Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c:288
-/*void HAL_IncTick(void) {
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-}*/
 
 
 

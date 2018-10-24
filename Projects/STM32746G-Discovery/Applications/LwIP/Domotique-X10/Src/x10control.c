@@ -22,11 +22,6 @@ extern char buf[] = {0,1,1,1, 0,0,0,0, 1,0,0,0, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,
 
 #endif
 
-// A1 ON
-//static char buf_on[]  = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1 };
-// A1 OFF
-//static char buf_off[] = {0,1,1,0, 0,0,0,0, 1,0,0,1, 1,1,1,1,  0,0,1,0, 0,0,0,0, 1,1,0,1, 1,1,1,1 };
-
 
 static int counter;
 static int current_bit_index;
@@ -37,10 +32,6 @@ void X10_Init(void) {
   do_send = 0;
 
   int i = 0;
-  for (i = 0; i < 32; i++) {
-    //buf_send[i] = 0;
-    //buf_send[i] = i%2;
-  }
 
   state = 0;
   counter = 0;
@@ -107,7 +98,6 @@ void X10_Init(void) {
 }
 
 void RF_X10_Send_On(void) {
-  //LCD_UsrLog ((char *)"Sending ON \n");
   buf[BIT_STATE_INDEX] = 0;
   buf[BIT_STATE_INDEX+8] = 1;
   int i = 0;
@@ -118,7 +108,6 @@ void RF_X10_Send_On(void) {
 }
 
 void RF_X10_Send_Off(void) {
-  //LCD_UsrLog ((char *)"Sending OFF \n");
   buf[BIT_STATE_INDEX] = 1;
   buf[BIT_STATE_INDEX+8] = 0;
   int i = 0;
@@ -183,9 +172,6 @@ void TIM3_triggered(void) {
           HAL_GPIO_WritePin(GPIOG, GPIO_PIN_6, GPIO_PIN_RESET);
         }
         counter = 0;
-        BSP_LED_Toggle(LED1);
-        //sprintf((char*)text, "new state = %d\n", state);
-        //LCD_UsrLog ( (uint8_t *)text );
       } // chgt etat
 
     }
