@@ -98,6 +98,9 @@ void X10_Init(void) {
 }
 
 void RF_X10_Send_On(void) {
+  // prevent sending conflicts
+  if (do_send == 1) return;
+
   buf[BIT_STATE_INDEX] = 0;
   buf[BIT_STATE_INDEX+8] = 1;
   int i = 0;
@@ -108,6 +111,9 @@ void RF_X10_Send_On(void) {
 }
 
 void RF_X10_Send_Off(void) {
+  // prevent sending conflicts
+  if (do_send == 1) return;
+
   buf[BIT_STATE_INDEX] = 1;
   buf[BIT_STATE_INDEX+8] = 0;
   int i = 0;
