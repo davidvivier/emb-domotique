@@ -5,8 +5,9 @@
 static char do_send;
 
 static char state;
+   //                              0   1  2   3  4   5  6   7
 static signed char next_state[] = {1, -1, 3, -1, 5, -1, 7, -1};
-static int state_threshold[] = {16, 8, 1, 0, 1, 1, 1, 3};
+static int state_threshold[]    = {16, 8, 1,  0, 1,  1, 1,  3};
 static char buf_send[32];
 
 
@@ -107,6 +108,7 @@ void RF_X10_Send_On(void) {
   for (i = 0; i < 32; i++) {
     buf_send[i] = buf[i];
   }
+  // trigger sending
   do_send = 1;
 }
 
@@ -120,6 +122,7 @@ void RF_X10_Send_Off(void) {
   for (i = 0; i < 32; i++) {
     buf_send[i] = buf[i];
   }
+  // trigger sending
   do_send = 1;
 }
 
@@ -127,7 +130,8 @@ void RF_X10_Send_Off(void) {
 void TIM3_triggered(void) {
   
     if (do_send || (state == 2)) {
-      counter++;
+      counter++; // nb de cycles timer écoulés
+      // counter permet d'attendre la durée de l'état courant
       if (counter >= state_threshold[state]) {
         // on change d'état
         if (state % 2 == 1) {
