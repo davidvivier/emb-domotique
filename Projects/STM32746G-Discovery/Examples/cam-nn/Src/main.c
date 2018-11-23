@@ -66,17 +66,7 @@ static void CPU_CACHE_Enable(void);
 
 BSP_DemoTypedef  BSP_examples[] =
   {
-    {LCD_demo, "LCD", 0},
-    {Touchscreen_demo, "TOUCHSCREEN", 0},
-    {AudioRec_demo, "AUDIO RECORD", 0},
-    {AudioLoopback_demo, "AUDIO LOOPBACK", 0},
-    {AudioPlay_demo, "AUDIO PLAY", 0},
-    {SD_demo, "mSD", 0},
-    {Log_demo, "LCD LOG", 0},
-    {SDRAM_demo, "SDRAM", 0},
-    {SDRAM_DMA_demo, "SDRAM DMA", 0},
-    {EEPROM_demo, "EEPROM", 0},
-    {QSPI_demo, "QSPI", 0},
+    {Camera_demo, "CAMERA", 0}
   };
 
 /* Private functions ---------------------------------------------------------*/
