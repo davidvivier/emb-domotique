@@ -53,6 +53,13 @@
 #include "arm_nnfunctions.h"
 #include "arm_nnsupportfunctions.h"
 
+
+#include "arm_nnexamples_cifar10_inputs.h"
+#include "arm_nnexamples_cifar10_parameter.h"
+#include "arm_nnexamples_cifar10_weights.h"
+
+#include "lcd_log.h"
+
 /* Macros --------------------------------------------------------------------*/
 
 
