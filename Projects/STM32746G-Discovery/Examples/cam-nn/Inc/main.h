@@ -49,7 +49,14 @@
 #include "stm32746g_discovery_audio.h"
 #include "stm32746g_discovery_qspi.h"
 
+#include "arm_nn_tables.h"
+#include "arm_nnfunctions.h"
+#include "arm_nnsupportfunctions.h"
+
 /* Macros --------------------------------------------------------------------*/
+
+
+
 #ifdef USE_FULL_ASSERT
 /* Assert activated */
 #define ASSERT(__condition__)                do { if(__condition__) \
