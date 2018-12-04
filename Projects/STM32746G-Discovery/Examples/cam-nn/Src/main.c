@@ -152,7 +152,7 @@ int main(void)
       HAL_Delay(10);
       while (BSP_PB_GetState(BUTTON_KEY) != RESET);
 
-      //BSP_examples[DemoIndex++].DemoFunc();
+      BSP_examples[DemoIndex++].DemoFunc();
       nn_cifar10();
 
       if (DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
@@ -228,8 +228,8 @@ void nn_cifar10(void) {
 
   for (int i = 0; i < 10; i++)
   {
-      printf("%d: %d\n", i, output_data[i]);
-      LCD_UsrLog ("%d : %d\n", i, output_data[i]);
+      //printf("%d: %d\n", i, output_data[i]);
+      //LCD_UsrLog ("%d : %d\n", i, output_data[i]);
   }
 
   BSP_LCD_DisplayStringAt(0, 40, (uint8_t *)"Finished", CENTER_MODE);

@@ -103,6 +103,9 @@ static uint32_t          contrast = CAMERA_CONTRAST_LEVEL2;          /* Mid-leve
 static uint32_t          brightness = CAMERA_BRIGHTNESS_LEVEL2;      /* Mid-level contrast */
 static DMA2D_HandleTypeDef hdma2d_camera;
 
+
+static uint32_t lcd_read_offset;
+
 /* Private function prototypes -----------------------------------------------*/
 static void Camera_SetHint(void);
 
@@ -640,6 +643,18 @@ void BSP_CAMERA_LineEventCallback(void)
       offset_cam = 0;
       offset_lcd = 0;
       display_line_counter = 0;
+      // end of all lines
+
+      lcd_read_offset = ((((LcdResY - CameraResY) / 2) * LcdResX)   /* Middle of the screen on Y axis */
+                      +   ((LcdResX - CameraResX) / 2))             /* Middle of the screen on X axis */
+                        * sizeof(uint32_t)
+                      + 40 * LcdResX * sizeof(uint32_t);
+
+      LCD_UsrLog ("pixel : %d %d %d %d\n", (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 0 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 8 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 16 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 24 ) ) );
+
     }
   }
 }
