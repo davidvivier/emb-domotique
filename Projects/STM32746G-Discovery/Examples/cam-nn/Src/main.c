@@ -99,6 +99,10 @@ q7_t      col_buffer[2 * 5 * 5 * 32 * 2];
 
 q7_t      scratch_buffer[32 * 32 * 10 * 4];
 
+
+extern uint8_t square_img[ 32 * 32 * 3];
+
+
 void nn_cifar10(void);
 
 

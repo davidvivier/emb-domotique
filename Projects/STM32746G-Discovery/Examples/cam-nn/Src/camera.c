@@ -85,6 +85,9 @@ typedef enum
 #define CAMERA_BRIGHTNESS_MIN     CAMERA_BRIGHTNESS_LEVEL0
 #define CAMERA_BRIGHTNESS_MAX     CAMERA_BRIGHTNESS_LEVEL4
 
+#define SQUARE_DELTA_X (480/2 - 32/2)
+#define SQUARE_DELTA_Y (272/2 - 32/2)
+
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -104,7 +107,19 @@ static uint32_t          brightness = CAMERA_BRIGHTNESS_LEVEL2;      /* Mid-leve
 static DMA2D_HandleTypeDef hdma2d_camera;
 
 
+uint8_t  text[30];
 static uint32_t lcd_read_offset;
+static int square_x;
+static int square_y;
+static uint32_t pixel;
+static uint8_t pixel_red;
+static uint8_t pixel_green;
+static uint8_t pixel_blue;
+
+
+int square_counter;
+uint8_t square_img[];
+
 
 /* Private function prototypes -----------------------------------------------*/
 static void Camera_SetHint(void);
@@ -650,10 +665,52 @@ void BSP_CAMERA_LineEventCallback(void)
                         * sizeof(uint32_t)
                       + 40 * LcdResX * sizeof(uint32_t);
 
-      LCD_UsrLog ("pixel : %d %d %d %d\n", (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 0 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 8 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 16 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 24 ) ) );
+      /* LCD_UsrLog ("pixel : %d %d %d %d\n", (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 0 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 1 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 2 ) ),
+                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 3 ) ) ); */
+     
+      // se promène linéairement dans le square en absolu
+      square_counter = 0;
+
+      for (square_y = 0; square_y < 32; square_y++) {
+        for (square_x = 0; square_x < 32; square_x++) {
+
+          // on parcourt le carré pour choper chaque pixel
+
+          //pixel_red = (uint8_t)  *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset + square_y*CameraResX + square_x ) + 8 );
+
+          pixel = (uint32_t) ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) ) );
+
+          //pixel_red = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 1 ) );
+          //pixel_green = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 2 ) );
+          //pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 3 ) );
+
+          //LCD_UsrLog ("pixel_red=%d\n", pixel_red);
+          //sprintf((char*)text, "pixel = %d    ", pixel_red);
+          //BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
+          BSP_LCD_DrawPixel(square_x, square_y, pixel);
+
+          // on le recopie à côté
+          //*((uint32_t*)(LCD_FRAME_BUFFER +  (100+square_y)*LcdResX + (square_x))) = pixel_red;
+
+          //square_img[ (square_y*32 + square_x)*3 + 0] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + lcd_read_offset) + 8 ) );
+          //square_img[ (square_y*32 + square_x)*3 + 1] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 16 ) );
+          //square_img[ (square_y*32 + square_x)*3 + 2] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 32 ) );
+
+          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 1 ) );
+          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 2 ) );
+          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 3 ) );
+          
+
+          /* square_counter++;
+          if (square_counter % 4 == 0) {
+            square_counter++; // on passe car c'est le alpha
+          } */
+
+        }
+      }
+      //LCD_UsrLog ("pixel_red=%d\n",pixel_red);
 
     }
   }
