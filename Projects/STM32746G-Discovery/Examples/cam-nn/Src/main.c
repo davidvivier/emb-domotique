@@ -247,7 +247,6 @@ void nn_cifar10(void) {
       //LCD_UsrLog ("%d : %d\n", i, output_data[i]);
   }
 
-  BSP_LCD_DisplayStringAt(0, 40, (uint8_t *)"Finished", CENTER_MODE);
   display_result();
 }
 
@@ -258,17 +257,27 @@ void display_result(void) {
 //sprintf((char*)text, "pixel = %d    ", pixel_red);
           //BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
 
+  BSP_LCD_SetTextColor(LCD_COLOR_DARKBLUE);
+  BSP_LCD_SetFont(&Font16);
   max_value = 0;
   for (i = 0; i < 10; i++) {
     if (output_data[i] > max_value) {
       max_index = i;
       max_value = output_data[i];
     }
+    BSP_LCD_DisplayStringAt(0, 110 + i*15, (uint8_t *)"                                         ", LEFT_MODE);
+    sprintf((char*)text, "%s %d%%                                       ", classes[i], output_data[i]*100/127 );
+    BSP_LCD_DisplayStringAt(0 + output_data[i]*100/127, 110 + i*15, (uint8_t *)&text, LEFT_MODE);
   }
 
-  sprintf((char*)text, "max = %d    ", max_index);
-  BSP_LCD_DisplayStringAt(0, 40, (uint8_t *)&text, LEFT_MODE);
-  
+  BSP_LCD_SetFont(&Font20);
+  if (max_value > 60) {
+    sprintf((char*)text, "class = %s      ", classes[max_index]);
+  } else {
+    sprintf((char*)text, "class = unknown      ");
+  }
+  BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)&text, LEFT_MODE);
+
 }
 
 /**

@@ -182,7 +182,7 @@ void Camera_demo (void)
 
       BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
       BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-      BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - CAMERA_STATUS_TEXT_POS, (uint8_t *)"Wait for camera initialization...", CENTER_MODE);
+      //BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - CAMERA_STATUS_TEXT_POS, (uint8_t *)"Wait for camera initialization...", CENTER_MODE);
 
       BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
       BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
@@ -194,7 +194,7 @@ void Camera_demo (void)
           CameraResY = CAMERA_QQVGA_RES_Y;
           /* Initialize the Camera */
           camera_status = BSP_CAMERA_Init(RESOLUTION_R160x120);
-          BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - CAMERA_STATUS_TEXT_POS, (uint8_t *)"       QQVGA camera stream       ", CENTER_MODE);
+          //BSP_LCD_DisplayStringAt(0, BSP_LCD_GetYSize() - CAMERA_STATUS_TEXT_POS, (uint8_t *)"       QQVGA camera stream       ", CENTER_MODE);
           break;
 
         case CAMERA_R320x240:
@@ -466,21 +466,12 @@ static void Camera_SetHint(void)
 
   /* Set Camera Demo description */
   BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-  BSP_LCD_FillRect(0, 0, BSP_LCD_GetXSize(), 90);
+  BSP_LCD_FillRect(0, 0, BSP_LCD_GetXSize(), 30);
   BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
   BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
   BSP_LCD_SetFont(&Font24);
-  BSP_LCD_DisplayStringAt(0, 0, (uint8_t *)"CAMERA EXAMPLE", CENTER_MODE);
-  BSP_LCD_SetFont(&Font12);
-  BSP_LCD_DisplayStringAt(0, 30, (uint8_t *)"     Press 3 fingers for next resolution     ", CENTER_MODE);
-  BSP_LCD_DisplayStringAt(0, 45, (uint8_t *)"Press Top/Bottom screen to change brightness ", CENTER_MODE);
-  BSP_LCD_DisplayStringAt(0, 60, (uint8_t *)"Press Left/Right screen to change contrast   ", CENTER_MODE);
-  BSP_LCD_DisplayStringAt(0, 75, (uint8_t *)"Press 2 fingers to change visual effect      ", CENTER_MODE);
-
-  /* Set the LCD Text Color */
-  BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-  BSP_LCD_DrawRect(10, 100, BSP_LCD_GetXSize() - 20, BSP_LCD_GetYSize() - 110);
-  BSP_LCD_DrawRect(11, 101, BSP_LCD_GetXSize() - 22, BSP_LCD_GetYSize() - 112);
+  BSP_LCD_DisplayStringAt(0, 0, (uint8_t *)"Image recognition 3000", CENTER_MODE);
+  
 }
 
 /**
@@ -675,7 +666,7 @@ void BSP_CAMERA_LineEventCallback(void)
           pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 3 ) );
 
           // on le recopie à côté
-          BSP_LCD_DrawPixel(square_x, square_y, pixel);
+          //BSP_LCD_DrawPixel(square_x, square_y, pixel);
 
           image_data[square_counter++] = pixel_red;
           image_data[square_counter++] = pixel_green;
