@@ -134,11 +134,18 @@ extern uint8_t     MfxExtiReceived;
 #ifndef USE_FULL_ASSERT
 extern uint32_t    ErrorCounter;
 #endif
+
+
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 
 #define COUNT_OF_EXAMPLE(x)    (sizeof(x)/sizeof(BSP_DemoTypedef))
 /* Exported functions ------------------------------------------------------- */
+
+
+void nn_cifar10(void);
+
 void AudioPlay_demo (void);
 void AudioRec_demo (void);
 void AudioLoopback_demo (void);

@@ -118,7 +118,7 @@ static uint8_t pixel_blue;
 
 
 int square_counter;
-uint8_t square_img[];
+extern uint8_t image_data[];
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -682,9 +682,9 @@ void BSP_CAMERA_LineEventCallback(void)
 
           pixel = (uint32_t) ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) ) );
 
-          //pixel_red = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 1 ) );
-          //pixel_green = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 2 ) );
-          //pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + SQUARE_DELTA_X+square_x ) + 3 ) );
+          pixel_red = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 1 ) );
+          pixel_green = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 2 ) );
+          pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 3 ) );
 
           //LCD_UsrLog ("pixel_red=%d\n", pixel_red);
           //sprintf((char*)text, "pixel = %d    ", pixel_red);
@@ -697,10 +697,13 @@ void BSP_CAMERA_LineEventCallback(void)
           //square_img[ (square_y*32 + square_x)*3 + 0] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + lcd_read_offset) + 8 ) );
           //square_img[ (square_y*32 + square_x)*3 + 1] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 16 ) );
           //square_img[ (square_y*32 + square_x)*3 + 2] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 32 ) );
+          //square_counter += 3;
 
-          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 1 ) );
-          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 2 ) );
-          //square_img[square_counter++] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + (SQUARE_DELTA_Y + square_y)*SQUARE_DELTA_X + square_x ) + 3 ) );
+          image_data[square_counter++] = pixel_red;
+          //if (square_counter > 99) {square_counter = 99;}
+          //image_data[98] = pixel_red;
+          image_data[square_counter++] = pixel_green;
+          image_data[square_counter++] = pixel_blue;
           
 
           /* square_counter++;

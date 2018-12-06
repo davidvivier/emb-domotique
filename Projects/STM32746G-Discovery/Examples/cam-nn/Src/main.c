@@ -91,7 +91,7 @@ static q7_t ip1_wt[IP1_DIM * IP1_OUT] = IP1_WT;
 static q7_t ip1_bias[IP1_OUT] = IP1_BIAS;
 
 /* Here the image_data should be the raw uint8 type RGB image in [RGB, RGB, RGB ... RGB] format */
-uint8_t   image_data[CONV1_IM_CH * CONV1_IM_DIM * CONV1_IM_DIM] = IMG_DATA;
+uint8_t   image_data[CONV1_IM_CH * CONV1_IM_DIM * CONV1_IM_DIM];
 q7_t      output_data[IP1_OUT];
 
 //vector buffer: max(im2col buffer,average pool buffer, fully connected buffer)
@@ -100,10 +100,6 @@ q7_t      col_buffer[2 * 5 * 5 * 32 * 2];
 q7_t      scratch_buffer[32 * 32 * 10 * 4];
 
 
-extern uint8_t square_img[ 32 * 32 * 3];
-
-
-void nn_cifar10(void);
 
 
 /**
