@@ -141,8 +141,8 @@ int main(void)
   BSP_LCD_LayerDefaultInit(LTDC_ACTIVE_LAYER, LCD_FRAME_BUFFER);
 
   Display_DemoDescription();
-
-
+  
+  BSP_examples[DemoIndex++].DemoFunc();
 
   /* Wait For User inputs */
   while (1)
@@ -152,8 +152,8 @@ int main(void)
       HAL_Delay(10);
       while (BSP_PB_GetState(BUTTON_KEY) != RESET);
 
-      BSP_examples[DemoIndex++].DemoFunc();
-      nn_cifar10();
+      //BSP_examples[DemoIndex++].DemoFunc();
+      //nn_cifar10();
 
       if (DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
       {
