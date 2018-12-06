@@ -107,7 +107,7 @@ static uint32_t          brightness = CAMERA_BRIGHTNESS_LEVEL2;      /* Mid-leve
 static DMA2D_HandleTypeDef hdma2d_camera;
 
 
-uint8_t  text[30];
+extern uint8_t  text[30];
 static uint32_t lcd_read_offset;
 static int square_x;
 static int square_y;
@@ -683,8 +683,10 @@ void BSP_CAMERA_LineEventCallback(void)
 
         }
       }
-      //LCD_UsrLog ("pixel_red=%d\n",pixel_red);
-
+      
+      BSP_LCD_SetTextColor(LCD_COLOR_RED);
+      BSP_LCD_DrawRect(SQUARE_DELTA_X, SQUARE_DELTA_Y, 32, 32);
+      nn_cifar10();
     }
   }
 }

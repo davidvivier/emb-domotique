@@ -145,6 +145,7 @@ extern uint32_t    ErrorCounter;
 
 
 void nn_cifar10(void);
+void display_result(void);
 
 void AudioPlay_demo (void);
 void AudioRec_demo (void);

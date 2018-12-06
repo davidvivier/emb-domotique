@@ -99,8 +99,25 @@ q7_t      col_buffer[2 * 5 * 5 * 32 * 2];
 
 q7_t      scratch_buffer[32 * 32 * 10 * 4];
 
+q7_t max_value;
+int max_index;
 
+int i;
 
+uint8_t  text[30];
+
+char* classes[] = {
+  "airplane",
+  "automobile",
+  "bird",
+  "cat",
+  "deer",
+  "dog",
+  "frog",
+  "horse",
+  "ship",
+  "truck"
+};
 
 /**
   * @brief  Main program
@@ -231,8 +248,28 @@ void nn_cifar10(void) {
   }
 
   BSP_LCD_DisplayStringAt(0, 40, (uint8_t *)"Finished", CENTER_MODE);
+  display_result();
 }
 
+
+void display_result(void) {
+  // get index of max index
+
+//sprintf((char*)text, "pixel = %d    ", pixel_red);
+          //BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
+
+  max_value = 0;
+  for (i = 0; i < 10; i++) {
+    if (output_data[i] > max_value) {
+      max_index = i;
+      max_value = output_data[i];
+    }
+  }
+
+  sprintf((char*)text, "max = %d    ", max_index);
+  BSP_LCD_DisplayStringAt(0, 40, (uint8_t *)&text, LEFT_MODE);
+  
+}
 
 /**
   * @brief  System Clock Configuration
