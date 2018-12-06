@@ -119,6 +119,9 @@ char* classes[] = {
   "truck"
 };
 
+q7_t value;
+int percent;
+
 /**
   * @brief  Main program
   * @param  None
@@ -241,12 +244,6 @@ void nn_cifar10(void) {
 
   arm_softmax_q7(output_data, 10, output_data);
 
-  for (int i = 0; i < 10; i++)
-  {
-      //printf("%d: %d\n", i, output_data[i]);
-      //LCD_UsrLog ("%d : %d\n", i, output_data[i]);
-  }
-
   display_result();
 }
 
@@ -261,19 +258,29 @@ void display_result(void) {
   BSP_LCD_SetFont(&Font16);
   max_value = 0;
   for (i = 0; i < 10; i++) {
-    if (output_data[i] > max_value) {
+    value = output_data[i];
+    percent = value*100/127;
+    if (value > max_value) {
       max_index = i;
-      max_value = output_data[i];
+      max_value = value;
     }
-    BSP_LCD_DisplayStringAt(0, 110 + i*15, (uint8_t *)"                                         ", LEFT_MODE);
+
+    if (percent >= THRESHOLD) {
+      BSP_LCD_SetTextColor(LCD_COLOR_DARKBLUE);
+    } else {
+      BSP_LCD_SetTextColor(LCD_COLOR_LIGHTGRAY);
+    }  
+    BSP_LCD_DisplayStringAt(180, 110 + i*15, (uint8_t *)"                                         ", LEFT_MODE);
     sprintf((char*)text, "%s %d%%                                       ", classes[i], output_data[i]*100/127 );
-    BSP_LCD_DisplayStringAt(0 + output_data[i]*100/127, 110 + i*15, (uint8_t *)&text, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(180 + output_data[i]*170/127, 110 + i*15, (uint8_t *)&text, LEFT_MODE);
   }
 
   BSP_LCD_SetFont(&Font20);
-  if (max_value > 60) {
+  if (max_value*100/127 >= THRESHOLD) {
+    BSP_LCD_SetTextColor(LCD_COLOR_DARKBLUE);
     sprintf((char*)text, "class = %s      ", classes[max_index]);
   } else {
+    BSP_LCD_SetTextColor(LCD_COLOR_LIGHTGRAY);
     sprintf((char*)text, "class = unknown      ");
   }
   BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)&text, LEFT_MODE);

@@ -112,6 +112,17 @@
 /* The Audio file is flashed with ST-Link Utility @ flash address =  AUDIO_SRC_FILE_ADDRESS */
 #define AUDIO_SRC_FILE_ADDRESS       0x08080000   /* Audio file address in flash */
 
+
+#define CAM_POS_X 10
+#define CAM_POS_Y 80
+
+#define SQUARE_DELTA_X (CAM_POS_X + 160/2 - 32/2)
+#define SQUARE_DELTA_Y (CAM_POS_Y + 40 + 120/2 - 32/2)
+
+
+#define THRESHOLD 80 //  THRESHOLD % for acceptance
+
+
 /* Exported types ------------------------------------------------------------*/
 typedef struct
 {

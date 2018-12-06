@@ -85,9 +85,6 @@ typedef enum
 #define CAMERA_BRIGHTNESS_MIN     CAMERA_BRIGHTNESS_LEVEL0
 #define CAMERA_BRIGHTNESS_MAX     CAMERA_BRIGHTNESS_LEVEL4
 
-#define SQUARE_DELTA_X (480/2 - 32/2)
-#define SQUARE_DELTA_Y (272/2 - 32/2)
-
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -108,10 +105,8 @@ static DMA2D_HandleTypeDef hdma2d_camera;
 
 
 extern uint8_t  text[30];
-static uint32_t lcd_read_offset;
 static int square_x;
 static int square_y;
-static uint32_t pixel;
 static uint8_t pixel_red;
 static uint8_t pixel_green;
 static uint8_t pixel_blue;
@@ -471,7 +466,13 @@ static void Camera_SetHint(void)
   BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
   BSP_LCD_SetFont(&Font24);
   BSP_LCD_DisplayStringAt(0, 0, (uint8_t *)"Image recognition 3000", CENTER_MODE);
-  
+
+    
+  BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+  BSP_LCD_SetTextColor(LCD_COLOR_LIGHTBLUE);
+  BSP_LCD_SetFont(&Font16);
+  sprintf((char*)text, "threshold = %d%%", THRESHOLD);
+  BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)&text, LEFT_MODE);  
 }
 
 /**
@@ -600,6 +601,10 @@ void BSP_CAMERA_LineEventCallback(void)
                       +   ((LcdResX - CameraResX) / 2))             /* Middle of the screen on X axis */
                      * sizeof(uint32_t);
 
+      offset_lcd = ( (CAM_POS_Y * LcdResX) // y
+                      + CAM_POS_X  )         // x
+                    * sizeof(uint32_t);
+
       if (CameraResY == CAMERA_QQVGA_RES_Y)
       { /* Add offset for QQVGA */
         offset_lcd += 40 * LcdResX * sizeof(uint32_t);
@@ -658,9 +663,6 @@ void BSP_CAMERA_LineEventCallback(void)
         for (square_x = 0; square_x < 32; square_x++) {
 
           // on parcourt le carré pour choper chaque pixel
-
-          pixel = (uint32_t) ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) ) );
-
           pixel_red = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 1 ) );
           pixel_green = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 2 ) );
           pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 3 ) );
