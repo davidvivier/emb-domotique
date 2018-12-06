@@ -169,8 +169,6 @@ int main(void)
 
 void nn_cifar10(void) {
 
-  
-  printf("start execution\n");
   /* start the execution */
 
   q7_t     *img_buffer1 = scratch_buffer;

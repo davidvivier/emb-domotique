@@ -660,16 +660,6 @@ void BSP_CAMERA_LineEventCallback(void)
       display_line_counter = 0;
       // end of all lines
 
-      lcd_read_offset = ((((LcdResY - CameraResY) / 2) * LcdResX)   /* Middle of the screen on Y axis */
-                      +   ((LcdResX - CameraResX) / 2))             /* Middle of the screen on X axis */
-                        * sizeof(uint32_t)
-                      + 40 * LcdResX * sizeof(uint32_t);
-
-      /* LCD_UsrLog ("pixel : %d %d %d %d\n", (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 0 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 1 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 2 ) ),
-                                           (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 3 ) ) ); */
-     
       // se promène linéairement dans le square en absolu
       square_counter = 0;
 
@@ -678,38 +668,18 @@ void BSP_CAMERA_LineEventCallback(void)
 
           // on parcourt le carré pour choper chaque pixel
 
-          //pixel_red = (uint8_t)  *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset + square_y*CameraResX + square_x ) + 8 );
-
           pixel = (uint32_t) ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) ) );
 
           pixel_red = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 1 ) );
           pixel_green = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 2 ) );
           pixel_blue = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + 4*((SQUARE_DELTA_Y + square_y)*LcdResX + SQUARE_DELTA_X+square_x) ) + 3 ) );
 
-          //LCD_UsrLog ("pixel_red=%d\n", pixel_red);
-          //sprintf((char*)text, "pixel = %d    ", pixel_red);
-          //BSP_LCD_DisplayStringAt(15, BSP_LCD_GetYSize() - 40, (uint8_t *)&text, LEFT_MODE);
+          // on le recopie à côté
           BSP_LCD_DrawPixel(square_x, square_y, pixel);
 
-          // on le recopie à côté
-          //*((uint32_t*)(LCD_FRAME_BUFFER +  (100+square_y)*LcdResX + (square_x))) = pixel_red;
-
-          //square_img[ (square_y*32 + square_x)*3 + 0] = (uint8_t) ( *( (uint32_t*) (LCD_FRAME_BUFFER + lcd_read_offset) + 8 ) );
-          //square_img[ (square_y*32 + square_x)*3 + 1] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 16 ) );
-          //square_img[ (square_y*32 + square_x)*3 + 2] = (uint8_t)  ( *( (uint32_t*)(LCD_FRAME_BUFFER + lcd_read_offset) + 32 ) );
-          //square_counter += 3;
-
           image_data[square_counter++] = pixel_red;
-          //if (square_counter > 99) {square_counter = 99;}
-          //image_data[98] = pixel_red;
           image_data[square_counter++] = pixel_green;
           image_data[square_counter++] = pixel_blue;
-          
-
-          /* square_counter++;
-          if (square_counter % 4 == 0) {
-            square_counter++; // on passe car c'est le alpha
-          } */
 
         }
       }
